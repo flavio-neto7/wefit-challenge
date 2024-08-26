@@ -6,6 +6,7 @@ import Link from "next/link"
 
 export function Cart() {
   const { cart } = useCartContext()
+
   return (
     <Link href="/checkout" className="flex items-center space-x-2">
       <div className="text-right">

@@ -17,7 +17,6 @@ type ContextValue = {
   increaseQuantity: (itemId: number) => void
   decreaseQuantity: (itemId: number) => void
   clearCart: () => void
-  loading: boolean
 }
 
 const CartContext = createContext<ContextValue | null>(null)
@@ -26,24 +25,26 @@ const LOCAL_STORAGE_CART_KEY = "stored_cart"
 
 export const CartProvider = ({ children }: CartProviderProps) => {
   const [cartEntity, setCartEntity] = useState<Cart>(new Cart([]))
-  const [loading, setLoading] = useState(false)
   const cartPlain = useMemo(() => {
     return cartEntity.toPlainObject()
   }, [cartEntity])
 
-  function regenerateCart() {
+  function applyCartChanges() {
     setCartEntity(new Cart(cartEntity.getItems()))
+    updateLocalStorage()
   }
 
   useEffect(() => {
-    if (localStorage[LOCAL_STORAGE_CART_KEY]) {
-      setLoading(true)
-      const { cartItems } = extractFromLocalStored(
-        localStorage[LOCAL_STORAGE_CART_KEY]
-      )
+    try {
+      if (localStorage[LOCAL_STORAGE_CART_KEY]) {
+        const { cartItems } = extractFromLocalStored(
+          localStorage[LOCAL_STORAGE_CART_KEY]
+        )
 
-      setCartEntity(new Cart(cartItems))
-      setLoading(false)
+        setCartEntity(new Cart(cartItems))
+      }
+    } catch (error) {
+      console.error("Failed to load cart from local storage", error)
     }
   }, [])
 
@@ -55,34 +56,38 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       product.price
     )
     cartEntity.addItem(newItem)
-    regenerateCart()
+    applyCartChanges()
   }
 
   function increaseQuantity(itemId: number) {
     cartEntity.increaseQuantity(itemId)
-    regenerateCart()
+    applyCartChanges()
   }
 
   function decreaseQuantity(itemId: number) {
     cartEntity.decreaseQuantity(itemId)
-    regenerateCart()
+    applyCartChanges()
   }
 
   function removeFromCart(itemId: number) {
     cartEntity.removeItem(itemId)
-    regenerateCart()
+    applyCartChanges()
   }
 
   function clearCart() {
     cartEntity.clearCart()
-    regenerateCart()
+    applyCartChanges()
   }
 
   async function updateLocalStorage() {
-    const cartDtos = cartEntity
-      .getItems()
-      .map((cartItem) => cartItem.toPlainObject())
-    localStorage.setItem(LOCAL_STORAGE_CART_KEY, JSON.stringify([cartDtos]))
+    try {
+      const cartDtos = cartEntity
+        .getItems()
+        .map((cartItem) => cartItem.toPlainObject())
+      localStorage.setItem(LOCAL_STORAGE_CART_KEY, JSON.stringify([cartDtos]))
+    } catch (error) {
+      console.error("Failed to update local storage", error)
+    }
   }
 
   return (
@@ -94,7 +99,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         increaseQuantity,
         decreaseQuantity,
         clearCart,
-        loading,
       }}
     >
       {children}
