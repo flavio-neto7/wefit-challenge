@@ -16,6 +16,7 @@
 body {
   color: hsl(var(--primary-foreground));
   background: hsl(var(--surface));
+  height: 100vh;
 }
 
 @layer utilities {
