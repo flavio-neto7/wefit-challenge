@@ -3,7 +3,7 @@
 import { Cart } from "@/domain/Cart"
 import { CartItem } from "@/domain/CartItem"
 import { useState, createContext, useContext, useEffect, useMemo } from "react"
-import { PlainCartItem } from "./types"
+import { PlainCart, PlainCartItem } from "./types"
 import { Product } from "@/domain/Product"
 
 type CartProviderProps = {
@@ -11,13 +11,12 @@ type CartProviderProps = {
 }
 
 type ContextValue = {
-  cart: Cart
+  cart: PlainCart
   addToCart: (product: Product) => void
-  removeItem: (itemId: number) => void
+  removeFromCart: (itemId: number) => void
   increaseQuantity: (itemId: number) => void
   decreaseQuantity: (itemId: number) => void
   loading: boolean
-  totalProducts: number
 }
 
 const CartContext = createContext<ContextValue | null>(null)
@@ -25,95 +24,72 @@ const CartContext = createContext<ContextValue | null>(null)
 const LOCAL_STORAGE_CART_KEY = "stored_cart"
 
 export const CartProvider = ({ children }: CartProviderProps) => {
-  const [localRetrievedShop, setLocalRetrievedShop] = useState(false)
-  const [cart, setCart] = useState<Cart>(new Cart([]))
+  const [cartEntity, setCartEntity] = useState<Cart>(new Cart([]))
   const [loading, setLoading] = useState(false)
+  const cartPlain = useMemo(() => {
+    return cartEntity.toPlainObject()
+  }, [cartEntity])
+  console.log("cartEntity :>> ", cartEntity)
+  console.log("cartPlain :>> ", cartPlain)
 
-  const totalProducts = useMemo(() => {
-    return cart.getItems().reduce((accumulator, currentItem) => {
-      return accumulator + currentItem.getQuantity()
-    }, 0)
-  }, [cart])
+  function regenerateCart() {
+    setCartEntity(new Cart(cartEntity.getItems()))
+  }
 
   useEffect(() => {
     if (localStorage[LOCAL_STORAGE_CART_KEY]) {
       setLoading(true)
-      const { cartItems } = extractLocalStoredShop(
+      const { cartItems } = extractFromLocalStored(
         localStorage[LOCAL_STORAGE_CART_KEY]
       )
 
-      setLocalRetrievedShop(true)
-      setCart(new Cart(cartItems))
+      setCartEntity(new Cart(cartItems))
       setLoading(false)
     }
   }, [])
 
-  // useEffect(() => {
-  //   if (!cart.length && !checkout) {
-  //     return;
-  //   }
-  //   if (localRetrievedShop) {
-  //     setLocalRetrievedShop(false);
-  //     return;
-  //   }
-  //   if (!checkout) {
-  //     handleCreateRemoteCheckout();
-  //   } else {
-  //     handleUpdateRemoteCheckout();
-  //   }
-  // }, [cart]);
-
   function addToCart(product: Product) {
-    console.log("product :>> ", product)
     const newItem = new CartItem(
       product.id,
       product.title,
       product.image,
       product.price
     )
-    cart.addItem(newItem)
-    console.log("cart :>> ", cart)
-    setCart(new Cart(cart.getItems()))
+    cartEntity.addItem(newItem)
+    regenerateCart()
   }
 
   function increaseQuantity(itemId: number) {
-    const item = cart.getItems().find((item) => item.getId() === itemId)
-    if (item) {
-      item.increaseQuantity()
-    }
-    setCart(new Cart(cart.getItems()))
+    cartEntity.increaseQuantity(itemId)
+    regenerateCart()
   }
 
   function decreaseQuantity(itemId: number) {
-    const item = cart.getItems().find((item) => item.getId() === itemId)
-    if (item) {
-      item.decreaseQuantity()
-    }
-    setCart(new Cart(cart.getItems()))
+    cartEntity.decreaseQuantity(itemId)
+    regenerateCart()
   }
 
-  function removeItem(itemId: number) {
-    cart.removeItem(itemId)
-    setCart(new Cart(cart.getItems()))
+  function removeFromCart(itemId: number) {
+    cartEntity.removeItem(itemId)
+    regenerateCart()
   }
 
-  async function handleUpdateRemoteCheckout() {
-    setLoading(true)
-    const cartDtos = cart.getItems().map((cartItem) => cartItem.toPlainObject())
+  async function updateLocalStorage() {
+    const cartDtos = cartEntity
+      .getItems()
+      .map((cartItem) => cartItem.toPlainObject())
     localStorage.setItem(LOCAL_STORAGE_CART_KEY, JSON.stringify([cartDtos]))
-    setLoading(false)
   }
 
   return (
     <CartContext.Provider
       value={{
-        cart,
+        cart: cartPlain,
         addToCart,
-        removeItem,
+        removeFromCart,
         increaseQuantity,
         decreaseQuantity,
         loading,
-        totalProducts,
       }}
     >
       {children}
@@ -129,7 +105,7 @@ export const useCartContext = () => {
   return { ...contextValue }
 }
 
-function extractLocalStoredShop(localStorageObject: any) {
+function extractFromLocalStored(localStorageObject: any) {
   const storedCartInfo = JSON.parse(localStorageObject)
   const [cartDtos] = storedCartInfo
 
