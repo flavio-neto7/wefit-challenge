@@ -6,11 +6,21 @@ import { CartListMobile } from "./_components/CartListMobile"
 import { CartTotal } from "./_components/CartTotal"
 import { useCartContext } from "@/features/cart/cart-context"
 import { EmptyState } from "./_components/EmptyState"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 export default function CheckoutPage() {
-  const { cart } = useCartContext()
+  const { cart, clearCart } = useCartContext()
+  const router = useRouter()
+  const [isCheckingOut, setIsCheckingOut] = useState(false)
 
-  if (cart.totalItens === 0) return <EmptyState />
+  const handleCheckout = () => {
+    setIsCheckingOut(true)
+    clearCart()
+    router.push("/order-completed")
+  }
+
+  if (cart.totalItens === 0 && !isCheckingOut) return <EmptyState />
 
   return (
     <main className="min-h-screen p-4 pt-0">
@@ -22,7 +32,10 @@ export default function CheckoutPage() {
             <p className="text-sm text-muted font-bold">TOTAL</p>
             <CartTotal />
           </div>
-          <Button className="w-full lg:w-fit lg:-order-1 text-sm">
+          <Button
+            onClick={handleCheckout}
+            className="w-full lg:w-fit lg:-order-1 text-sm"
+          >
             FINALIZAR PEDIDO
           </Button>
         </div>
