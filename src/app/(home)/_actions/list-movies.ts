@@ -12,5 +12,5 @@ export const listMovies = cache(async () => {
   }
   const moviesList = await fetchMoviesListResponse.json()
 
-  return listMoviesSchema.parse(moviesList)
+  return listMoviesSchema.parse(moviesList).products
 })
