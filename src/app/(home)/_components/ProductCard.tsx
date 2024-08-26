@@ -1,7 +1,8 @@
 import Image from "next/image"
 import { ListMoviesItem } from "../_schema"
-import { Button } from "@/components/Button"
+
 import { PriceFormatter } from "@/lib/formatters"
+import { AddToCartButton } from "./AddToCartButton"
 
 type ProductCardProps = {
   product: ListMoviesItem
@@ -15,7 +16,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <p className="text-surface font-bold text-base">
         {PriceFormatter.format(product.price)}
       </p>
-      <Button>ADICIONAR AO CARRINHO</Button>
+      <AddToCartButton product={product} />
     </div>
   )
 }
