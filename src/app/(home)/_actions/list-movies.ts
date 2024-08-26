@@ -1,18 +1,7 @@
 "use server"
 
 import { cache } from "react"
-import { z } from "zod"
-
-const listMoviesItemSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  price: z.number(),
-  image: z.string(),
-})
-
-const listMoviesSchema = z.object({
-  products: z.array(listMoviesItemSchema),
-})
+import { listMoviesSchema } from "../_schema"
 
 export const listMovies = cache(async () => {
   // fake wait
