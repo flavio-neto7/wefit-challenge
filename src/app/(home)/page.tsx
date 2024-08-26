@@ -8,8 +8,8 @@ export default async function Home() {
   if (!movies.length) return <EmptyState />
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between pb-4">
-      <div className="grid gap-4">
+    <main className="min-h-screen p-4 pt-0">
+      <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
         {movies.map((movie) => (
           <ProductCard key={movie.id} product={movie} />
         ))}
