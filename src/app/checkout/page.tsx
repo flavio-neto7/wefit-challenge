@@ -1,9 +1,17 @@
+"use client"
+
 import { Button } from "@/components/Button"
 import { CartListDesktop } from "./_components/CartListDesktop"
 import { CartListMobile } from "./_components/CartListMobile"
 import { CartTotal } from "./_components/CartTotal"
+import { useCartContext } from "@/features/cart/cart-context"
+import { EmptyState } from "./_components/EmptyState"
 
 export default function CheckoutPage() {
+  const { cart } = useCartContext()
+
+  if (cart.totalItens === 0) return <EmptyState />
+
   return (
     <main className="min-h-screen p-4 pt-0">
       <div className="bg-white rounded py-4 px-6 flex flex-col gap-4">
