@@ -18,8 +18,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        <Navbar />
-        {children}
+        <div className="max-w-5xl mx-auto">
+          <Navbar />
+          {children}
+        </div>
       </body>
     </html>
   )
