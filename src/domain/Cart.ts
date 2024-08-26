@@ -21,7 +21,7 @@ export class Cart {
 
   decreaseQuantity(itemId: number) {
     const item = this.items.find((i) => i.getId() === itemId)
-    if (item) {
+    if (item && item.getQuantity() > 1) {
       item.decreaseQuantity()
     }
   }
