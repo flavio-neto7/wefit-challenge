@@ -15,7 +15,7 @@ export function CartLineProductQuantity({
   return (
     <div className="flex items-center space-x-2">
       <button
-        onClick={() => increaseQuantity(productId)}
+        onClick={() => decreaseQuantity(productId)}
         className="border-2 font-bold border-primary text-primary rounded-full h-5 w-5 flex items-center justify-center"
       >
         -
@@ -24,7 +24,7 @@ export function CartLineProductQuantity({
         {children}
       </p>
       <button
-        onClick={() => decreaseQuantity(productId)}
+        onClick={() => increaseQuantity(productId)}
         className="border-2 font-bold border-primary text-primary rounded-full h-5 w-5 flex items-center justify-center"
       >
         +
