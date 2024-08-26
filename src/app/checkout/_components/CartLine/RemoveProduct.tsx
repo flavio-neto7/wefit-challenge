@@ -7,9 +7,9 @@ type RemoveProductProps = {
   productId: number
 }
 export function CartLineRemoveProduct({ productId }: RemoveProductProps) {
-  const { removeItem } = useCartContext()
+  const { removeFromCart } = useCartContext()
   return (
-    <button onClick={() => removeItem(productId)}>
+    <button onClick={() => removeFromCart(productId)}>
       <Image
         src="/assets/remove.svg"
         width={16}
