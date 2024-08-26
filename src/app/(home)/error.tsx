@@ -3,7 +3,7 @@
 import { Button } from "@/components/Button"
 import Image from "next/image"
 
-export default function Error({
+export default function ErrorPage({
   error,
   reset,
 }: {
