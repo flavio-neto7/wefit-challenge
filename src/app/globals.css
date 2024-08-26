@@ -11,6 +11,7 @@
   --success-foreground: 0, 0%, 100%;
   --heading: 0, 0%, 20%;
   --muted: 0, 0%, 60%;
+  --light: 0, 0%, 85%;
 }
 
 body {
