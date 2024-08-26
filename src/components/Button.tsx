@@ -24,7 +24,7 @@ interface ButtonProps
 
 export function Button({ className, variant, ...props }: ButtonProps) {
   return (
-    <button className={cn(buttonVariants({ variant, className }))}>
+    <button className={cn(buttonVariants({ variant, className }))} {...props}>
       {props.children}
     </button>
   )
