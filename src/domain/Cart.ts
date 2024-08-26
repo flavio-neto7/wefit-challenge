@@ -1,7 +1,7 @@
 import { CartItem } from "./CartItem"
 
 export class Cart {
-  constructor(private readonly items: CartItem[] = []) {}
+  constructor(private items: CartItem[] = []) {}
 
   addItem(item: CartItem) {
     const existingItem = this.items.find((i) => i.getId() === item.getId())
@@ -27,7 +27,7 @@ export class Cart {
   }
 
   removeItem(itemId: number) {
-    this.items.filter((item) => item.getId() !== itemId)
+    this.items = this.items.filter((item) => item.getId() !== itemId)
   }
 
   get totalPrice() {
