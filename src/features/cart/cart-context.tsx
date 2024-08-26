@@ -16,6 +16,7 @@ type ContextValue = {
   removeFromCart: (itemId: number) => void
   increaseQuantity: (itemId: number) => void
   decreaseQuantity: (itemId: number) => void
+  clearCart: () => void
   loading: boolean
 }
 
@@ -74,6 +75,11 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     regenerateCart()
   }
 
+  function clearCart() {
+    cartEntity.clearCart()
+    regenerateCart()
+  }
+
   async function updateLocalStorage() {
     const cartDtos = cartEntity
       .getItems()
@@ -89,6 +95,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         removeFromCart,
         increaseQuantity,
         decreaseQuantity,
+        clearCart,
         loading,
       }}
     >

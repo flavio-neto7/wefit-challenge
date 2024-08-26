@@ -30,6 +30,10 @@ export class Cart {
     this.items = this.items.filter((item) => item.getId() !== itemId)
   }
 
+  clearCart() {
+    this.items = []
+  }
+
   get totalPrice() {
     return this.items.reduce((acc, item) => acc + item.getSubtotal(), 0)
   }
