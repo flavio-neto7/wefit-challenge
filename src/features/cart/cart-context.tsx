@@ -30,8 +30,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const cartPlain = useMemo(() => {
     return cartEntity.toPlainObject()
   }, [cartEntity])
-  console.log("cartEntity :>> ", cartEntity)
-  console.log("cartPlain :>> ", cartPlain)
 
   function regenerateCart() {
     setCartEntity(new Cart(cartEntity.getItems()))
