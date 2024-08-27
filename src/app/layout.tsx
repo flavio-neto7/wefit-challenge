@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { Navbar } from "./_components/Navbar"
+import { Open_Sans } from "next/font/google"
+import { Navbar } from "./_components/Navbar/Navbar"
 import { CartProvider } from "@/features/cart/cart-context"
 
-const inter = Inter({ subsets: ["latin"] })
+import "./globals.css"
+import StyledComponentsRegistry from "@/lib/registry"
+
+const openSans = Open_Sans({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "WeMovies",
@@ -18,12 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>
+      <body className={openSans.className}>
         <CartProvider>
-          <div className="max-w-5xl mx-auto">
-            <Navbar />
-            {children}
-          </div>
+          <StyledComponentsRegistry>
+            <div className="max-w-5xl mx-auto">
+              <Navbar />
+              {children}
+            </div>
+          </StyledComponentsRegistry>
         </CartProvider>
       </body>
     </html>
