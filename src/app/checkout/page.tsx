@@ -1,13 +1,14 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+
 import { Button } from "@/components/Button"
 import { CartListDesktop } from "./_components/CartListDesktop"
 import { CartListMobile } from "./_components/CartListMobile"
-import { CartTotal } from "./_components/CartTotal"
 import { useCartContext } from "@/features/cart/cart-context"
 import { EmptyState } from "./_components/EmptyState"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { PriceFormatter } from "@/lib/formatters"
 
 export default function CheckoutPage() {
   const { cart, clearCart } = useCartContext()
@@ -30,7 +31,9 @@ export default function CheckoutPage() {
         <div className="flex flex-wrap gap-4 justify-between items-center">
           <div className="flex justify-between w-full lg:w-fit lg:items-center lg:gap-4">
             <p className="text-sm text-muted font-bold">TOTAL</p>
-            <CartTotal />
+            <p className="text-2xl text-surface font-bold">
+              {PriceFormatter.format(cart.totalPrice)}
+            </p>
           </div>
           <Button
             onClick={handleCheckout}
