@@ -1,31 +1,46 @@
-import { cn } from "@/lib/utils"
-import { cva, type VariantProps } from "class-variance-authority"
+"use client"
 
-const buttonVariants = cva(
-  "inline-flex items-center justify-center font-bold text-xs py-3 px-6 gap-3 rounded whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground",
-        success: "bg-success text-success-foreground",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
+import styled, { css } from "styled-components"
+
+const buttonVariants = {
+  default: css`
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  `,
+  success: css`
+    background-color: hsl(var(--success));
+    color: hsl(var(--success-foreground));
+  `,
+}
+
+const StyledButton = styled.button<{ variant: "default" | "success" }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  gap: 0.75rem;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+  outline: none;
+  &:focus-visible {
+    ring: 2px solid var(--ring);
+    ring-offset: 2px;
   }
-)
+  ${({ variant }) => buttonVariants[variant]}
+`
 
-interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "default" | "success"
   children: React.ReactNode
 }
 
-export function Button({ className, variant, ...props }: ButtonProps) {
+export function Button({ variant = "default", ...props }: ButtonProps) {
   return (
-    <button className={cn(buttonVariants({ variant, className }))} {...props}>
+    <StyledButton variant={variant} {...props}>
       {props.children}
-    </button>
+    </StyledButton>
   )
 }
