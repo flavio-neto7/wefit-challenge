@@ -1,9 +1,9 @@
-import { listMovies } from "./_actions/list-movies"
+import { listProducts } from './_actions/list-products'
 import { EmptyState } from "./_components/EmptyState"
 import { ProductCard } from "./_components/ProductCard"
 
 export default async function Home() {
-  const movies = await listMovies()
+  const movies = await listProducts()
 
   if (!movies.length) return <EmptyState />
 

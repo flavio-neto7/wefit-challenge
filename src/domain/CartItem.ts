@@ -5,13 +5,7 @@ export class CartItem {
     private readonly image: string,
     private readonly price: number,
     private quantity: number = 1
-  ) {
-    this.id = id
-    this.title = title
-    this.image = image
-    this.price = price
-    this.quantity = quantity
-  }
+  ) {}
 
   increaseQuantity(amount: number = 1) {
     this.quantity += amount

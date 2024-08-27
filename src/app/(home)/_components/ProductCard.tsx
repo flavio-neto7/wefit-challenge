@@ -1,11 +1,11 @@
 import Image from "next/image"
-import { ListMoviesItem } from "../_schema"
 
 import { PriceFormatter } from "@/lib/formatters"
 import { AddToCartButton } from "./AddToCartButton"
+import { Product } from '@/domain/Product'
 
 type ProductCardProps = {
-  product: ListMoviesItem
+  product: Product
 }
 
 export function ProductCard({ product }: ProductCardProps) {
